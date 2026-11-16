@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalkulator Sederhana</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f3f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #f3f3f3;
+            width: 320px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid #d1d1d1;
+        }
+
+        .previous-display {
+            background-color: #f3f3f3;
+            width: 100%;
+            height: 30px;
+            border: none;
+            text-align: right;
+            font-size: 16px;
+            color: #666;
+            padding: 0 10px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .display {
+            background-color: #f3f3f3;
+            width: 100%;
+            height: 70px;
+            border: none;
+            text-align: right;
+            font-size: 48px;
+            font-weight: 600;
+            padding: 0 10px 10px 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        .btn {
+            background-color: #ffffff;
+            border: 1px solid #d1d1d1;
+            border-radius: 4px;
+            font-size: 18px;
+            height: 50px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: #e5e5e5; }
+        .btn.operator { background-color: #f9f9f9; }
+
+        #btn-equals {
+            background-color: #0078d7;
+            color: white;
+            font-size: 24px;
+            border: none;
+        }
+
+        #btn-equals:hover { background-color: #005a9e; }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" class="previous-display" id="layar-atas" value="" disabled>
+        <input type="text" class="display" id="layar-utama" value="0" disabled>
+        
+        <div class="buttons">
+            <button class="btn operator" onclick="clearDisplay()">C</button>
+            <button class="btn operator" onclick="clearDisplay()">CE</button>
+            <button class="btn operator" onclick="setOperator('%')">%</button>
+            <button class="btn operator" onclick="setOperator('/')">&#247;</button>
+
+            <button class="btn" onclick="appendNumber(7)">7</button>
+            <button class="btn" onclick="appendNumber(8)">8</button>
+            <button class="btn" onclick="appendNumber(9)">9</button>
+            <button class="btn operator" onclick="setOperator('*')">&#215;</button>
+
+            <button class="btn" onclick="appendNumber(4)">4</button>
+            <button class="btn" onclick="appendNumber(5)">5</button>
+            <button class="btn" onclick="appendNumber(6)">6</button>
+            <button class="btn operator" onclick="setOperator('-')">&#8722;</button>
+
+            <button class="btn" onclick="appendNumber(1)">1</button>
+            <button class="btn" onclick="appendNumber(2)">2</button>
+            <button class="btn" onclick="appendNumber(3)">3</button>
+            <button class="btn operator" onclick="setOperator('+')">+</button>
+
+            <button class="btn" onclick="appendNumber('-')">+/-</button>
+            <button class="btn" onclick="appendNumber(0)">0</button>
+            <button class="btn" onclick="appendNumber('.')">,</button>
+            <button class="btn" id="btn-equals" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let currentOperand = '';
+        let previousOperand = '';
+        let operation = undefined;
+
+        function updateDisplay() {
+            let layarUtama = document.getElementById('layar-utama');
+            let layarAtas = document.getElementById('layar-atas');
+            
+            layarUtama.value = currentOperand === '' ? '0' : currentOperand;
+            
+            if (operation != null) {
+                layarAtas.value = previousOperand + ' ' + operation;
+            } else {
+                layarAtas.value = '';
+            }
+        }
+
+        function appendNumber(number) {
+            if (number === '.' && currentOperand.includes('.')) return;
+            if (number === '-' && currentOperand !== '') return;
+            
+            if (currentOperand === '0' && number !== '.') {
+                 currentOperand = number.toString();
+            } else {
+                 currentOperand = currentOperand.toString() + number.toString();
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentOperand = '';
+            previousOperand = '';
+            operation = undefined;
+            updateDisplay();
+        }
+
+        function setOperator(operator) {
+            if (currentOperand === '') return;
+            if (previousOperand !== '') {
+                calculate();
+            }
+            operation = operator;
+            previousOperand = currentOperand;
+            currentOperand = '';
+            updateDisplay();
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousOperand);
+            const current = parseFloat(currentOperand);
+            
+            if (isNaN(prev) || isNaN(current)) return;
+
+            if (operation === '+') { 
+                result = prev + current; 
+            } else if (operation === '-') { 
+                result = prev - current; 
+            } else if (operation === '*') { 
+                result = prev * current; 
+            } else if (operation === '/') { 
+                if(current === 0) {
+                    alert("Tidak dapat dibagi dengan nol");
+                    clearDisplay();
+                    return;
+                }
+                result = prev / current; 
+            } else if (operation === '%') { 
+                result = prev % current; 
+            }
+
+            currentOperand = result.toString();
+            operation = undefined;
+            previousOperand = '';
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>

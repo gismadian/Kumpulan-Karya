@@ -179,6 +179,6 @@ Melalui Praktikum Modul 10, dapat dipahami bahwa Git adalah alat yang membantu p
 
 ⭐ **Praktikum Modul 10: Git** ⭐
 
-Dibuat oleh [Gisma Dian Utami] | [K3526026]
+Dibuat oleh [Gisma Dian Utami] | [K3525026]
 
 </div>
